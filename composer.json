@@ -1,0 +1,15 @@
+{
+    "name": "gud/html",
+    "type": "project",
+    "require": {
+        "nesbot/carbon": "^2.39",
+        "vlucas/phpdotenv": "^4.1",
+        "xpaw/php-minecraft-query": "^4.0"
+    },
+    "autoload": {
+        "files": [
+            "app/db.php",
+            "app/mix.php"
+        ]
+    }
+}

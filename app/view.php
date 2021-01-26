@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHS MC</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo mix('css/app.css') ?>">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+  <header class="navbar"  role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item">
+          <h1 class="title">CHS MC</h1>
+        </a>
+        <span role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </span>
+      </div>
+      <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-end">
+            <a href="/dynmap" class="navbar-link is-arrowless">
+              <span class="icon has-text-primary">
+                <i class="far fa-map"></i>
+              </span>
+              <span>DynMap</span>
+            </a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="hero is-fullheight-with-navbar bg is-medium">
+    <div class="hero-head">
+    </div>
+    <div class="hero-body has-text-centered">
+      <div class="container">
+        <div class="columns">
+          <div class="column"></div>
+          <div class="box column is-three-fifths">
+            <h1 class="title">
+              CHALMERS STUDENTKÅR
+            </h1>
+            <p class="subtitle">Minecraft server</p>
+            <hr>
+            <h2 class="title is-4">Getting started:</h2>
+            <p class="subtitle is-6">To join the server you need to register your account with your Chalmers student email.</p>
+            <div class="tile notification is-info has-text-left">
+              <ol>
+                  <li>
+                    <p>Login to <span class="has-text-warning">auth.mc.chs.se</span> in minecraft and follow the instructions in chat.</p>
+                  </li>
+                  <li>When that is done and you've gotten the verification you can join <span class="has-text-warning">mc.chs.se</span> and start playing.
+                </li>
+              </ol>
+            </div>
+            <hr>
+            <div>
+              <a target="_blank" href="https://gud.chs.chalmers.se">
+                <img src="images/skaparen.png" alt="G.U.D." width="150">
+              </a><br>
+              Powered By: <a target="_blank" href="https://gud.chs.chalmers.se">G.U.D.</a>
+            </div>
+            <hr>
+              <div id="status">
+                <p class="has-text-info">Loading <i class="fas fa-spinner fa-pulse"></i></p>
+              </div>
+            <p>
+               Combined logged-in time:<br> <span class="has-text-grey"><?php echo $display ?></span>
+            </p>
+          </div>
+          <div class="column"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-foot">
+    </div>
+  </section>
+  <div class="modal" id="online-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Players</p>
+        <button class="delete chs-modal-close" aria-label="close" data-modal="online-modal" data-tippy-content="Close"></button>
+      </header>
+      <section class="modal-card-body modal-card-foot" id="online-players">
+      </section>
+    </div>
+  </div>
+  <script id="motd-template-success" type="x-tmpl-mustache">
+    <p> <span class="has-text-success">Online:</span> <span id="players" class="chs-modal-open" data-modal="online-modal">{{ current }}/{{ max }}</span></p>
+    <p class="motd">{{{ motd }}}</p>
+  </script>
+  <script id="motd-template-error" type="x-tmpl-mustache">
+    <p class="has-text-danger">Offline</p>
+  </script>
+  <script src="<?php echo mix('js/manifest.js') ?>"></script>
+  <script src="<?php echo mix('js/vendor.js') ?>"></script>
+  <script src="<?php echo mix('js/app.js') ?>"></script>
+</body>
+</html>
