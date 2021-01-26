@@ -5,7 +5,7 @@ This is the CHS MC website that can be found here [mc.chs.se][1]
 ## Requirement
 
 * Requires a database with a `mc_stats` table
-* You need to setup npm to authenticate with GitHub Packages described [here][2]
+* Webserver with php, [composer][2] and [nodejs][3]
 
 ## Setup
 
@@ -35,8 +35,9 @@ Copy the latest version of the dynmap website files from the plugin folder to th
 
 ## License
 
-[MIT][3]
+[MIT][4]
 
 [1]: https://mc.chs.se/
-[2]: https://docs.github.com/en/packages/guides/configuring-npm-for-use-with-github-packages#authenticating-to-github-packages
-[3]: https://choosealicense.com/licenses/mit/
+[2]: https://getcomposer.org/
+[3]: https://nodejs.org/
+[4]: https://choosealicense.com/licenses/mit/
