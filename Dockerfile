@@ -15,10 +15,15 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev
 
 
-FROM php:8.3-apache as run
+FROM php:8.2-apache as run
 
-COPY --from=node-build /app/public /usr/local/apache2/htdocs/public
-COPY --from=composer-build /app/vendor /usr/local/apache2/htdocs/vendor
-COPY app /usr/local/apache2/htdocs/app
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+COPY --from=node-build /app/public /var/www/html
+COPY --from=composer-build /app/vendor /var/www/vendor
+COPY app /var/www/app
+
+
+WORKDIR /var/www/html
 
 EXPOSE 80
