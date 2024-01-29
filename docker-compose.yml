@@ -3,6 +3,8 @@ version: '3'
 services:
   chs-mc-website:
     build: .
+    networks:
+      - chs-mc-website
     ports:
       - "8080:80"
     environment:
@@ -17,6 +19,8 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     restart: always
+    networks:
+      - chs-mc-website
     environment:
       MYSQL_ROOT_PASSWORD: 5a7XoNwyRKgDyr9sA2rh
       MYSQL_DATABASE: mc_stats
@@ -26,3 +30,8 @@ services:
 
 volumes:
   mariadb:
+
+networks:
+  chs-mc-website:
+    driver: bridge
+    name: chs-mc-website
