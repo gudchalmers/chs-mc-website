@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  chs-mc-website:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - DB_USER: chs-mc-website
+      - DB_PASS: 5a7XoNwyRKgDyr9sA2rh
+      - DB_NAME: mc_stats
+      - DB_HOST: db
+  db:
+    image: mysql:8
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD: 5a7XoNwyRKgDyr9sA2rh
+      - MYSQL_DATABASE: mc_stats
+      - MYSQL_USER: chs-mc-website
+      - MYSQL_PASSWORD: 5a7XoNwyRKgDyr9sA2rh

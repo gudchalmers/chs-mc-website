@@ -21,6 +21,19 @@ if (!mix.inProduction()) {
     })
 }
 
+mix.webpackConfig({
+    module: {
+        rules: [
+            {
+                test: /\.m?js/,
+                resolve: {
+                    fullySpecified: false,
+                }
+            }
+        ]
+    }
+});
+
 mix.extract();
 mix.js('resources/js/app.js', 'public/js/')
     .sass('resources/scss/app.scss', '/css/')
