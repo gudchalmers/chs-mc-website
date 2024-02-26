@@ -1,31 +1,20 @@
-FROM node:20 as node-build
+FROM node:20
+ENV NODE_ENV=production
 
-WORKDIR /app
+WORKDIR /app/frontend
 
-COPY package*.json ./
+COPY frontend/package*.json ./
 RUN npm install
 
-COPY . .
+COPY frontend/ ./
 RUN npm run production
 
-FROM composer:2 as composer-build
-WORKDIR /app
+WORKDIR /app/backend
 
-COPY composer.json composer.lock ./
-RUN composer install --no-dev
+COPY backend/package*.json ./
+RUN npm install
 
+COPY backend/ ./
 
-FROM php:8.2-apache as run
-
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-COPY --from=node-build /app/public /var/www/html
-COPY --from=composer-build /app/vendor /var/www/vendor
-COPY app /var/www/app
-
-
-WORKDIR /var/www/html
-
-RUN chown -R www-data:www-data /var/www/
-
-EXPOSE 80
+EXPOSE 3000
+CMD ["node", "index.js"]

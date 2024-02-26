@@ -37,39 +37,40 @@ $(function () {
 
   async function updateMOTD() {
     try {
-      const response = await ky.get('/ping.php').json();
-      const data = response['data'];
+      const response = await ky.get('/ping').json();
+      const data = response['status'];
+      console.log(converter.toHTML(converter.parse(data['description'])));
       const rendered = Mustache.render($('#motd-template-success').html(), {
         current: data['players']['online'],
         max: data['players']['max'],
         motd: converter.toHTML(converter.parse(data['description']))
       });
       $('#status').html(rendered);
-      
-      let players = 'No players online';
-      let tooltipPlayers = players;
-      if (_.size(data['players']['sample']) > 0) {
-        tooltipPlayers = '<strong class="has-text-white">Players:</strong><br/>';
-        const playerList = _.map(data['players']['sample'], 'name');
 
-        players = playerList.join('<br/>');
-        tooltipPlayers += _.take(playerList, 10).map((element) => `<i class="has-text-weight-light">${element}</i>`).join('<br/>')
-        if (_.size(playerList) > 10) {
-          tooltipPlayers += `<br/>And ${_.size(playerList) - 10} more, click to see all.`
-        }
-      }
-      $('#online-players').html(players);
+      ///// Broken for now, need to get players from the response
+      // let players = 'No players online';
+      // let tooltipPlayers = players;
+      // if (_.size(data['players']['sample']) > 0) {
+      //   tooltipPlayers = '<strong class="has-text-white">Players:</strong><br/>';
+      //   const playerList = _.map(data['players']['sample'], 'name');
 
-      tippy('#players', {
-        content: tooltipPlayers,
-        allowHTML: true
-      });
+      //   players = playerList.join('<br/>');
+      //   tooltipPlayers += _.take(playerList, 10).map((element) => `<i class="has-text-weight-light">${element}</i>`).join('<br/>')
+      //   if (_.size(playerList) > 10) {
+      //     tooltipPlayers += `<br/>And ${_.size(playerList) - 10} more, click to see all.`
+      //   }
+      // }
+      // $('#online-players').html(players);
+
+      // tippy('#players', {
+      //   content: tooltipPlayers,
+      //   allowHTML: true
+      // });
     } catch (e) {
       $('#status').html(Mustache.render($('#motd-template-error').html()));
     }
-
   };
 
   updateMOTD();
-  setInterval(updateMOTD, 10000)
+  setInterval(updateMOTD, 30 * 1000)
 });
