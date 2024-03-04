@@ -179,6 +179,28 @@ app.get("/ping", async (_, res) => {
   }
 });
 
+app.post("/check", async (req, res) => {
+  let uuid = req.body.uuid;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    let sql = "SELECT * FROM users WHERE uuid = ?";
+    let rows = await conn.query(sql, [uuid]);
+    if (rows.length > 0) {
+      res.send({ status: rows[0].active ? "success" : "denied" });
+    } else {
+      res.send({ status: "denied" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.send({ status: "denied" });
+  } finally {
+    if (conn) conn.end();
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
