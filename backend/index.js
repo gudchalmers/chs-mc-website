@@ -32,7 +32,7 @@ const seed = async () => {
     console.log("Database initialized");
   } catch (err) {
     console.error(err);
-    // try again in 30 seconds
+    console.log("Retrying in 30 seconds")
     setTimeout(seed, 30000);
   } finally {
     if (conn) conn.end();
