@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 const dbName = process.env.DB_NAME || "mc_stats";
 
 const pool = mariadb.createPool({
-  host: "localhost",
+  host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: dbName,
   password: process.env.DB_PASS,
@@ -32,7 +32,7 @@ const seed = async () => {
     console.log("Database initialized");
   } catch (err) {
     console.error(err);
-    console.log("Retrying in 30 seconds")
+    console.log("Retrying in 30 seconds");
     setTimeout(seed, 30000);
   } finally {
     if (conn) conn.end();
@@ -77,15 +77,14 @@ app.post("/register", async (req, res) => {
     return;
   }
 
-  let uuid = await fetch(
+  let response = await fetch(
     `https://api.mojang.com/users/profiles/minecraft/${username}`
-  ).then((response) => {
-    if (response.status === 404) {
-      res.status(400).send("Username doesn't exist");
-      return;
-    }
-    return response.json().id;
-  });
+  );
+  if (response.status === 404) {
+    res.status(400).send("Username doesn't exist");
+    return;
+  }
+  let uuid = await response.json().id;
 
   let token = crypto.randomBytes(32).toString("hex");
 
@@ -97,7 +96,11 @@ app.post("/register", async (req, res) => {
     let sql = "SELECT * FROM users WHERE email = ?";
     let rows = await conn.query(sql, [userEmail]);
     if (rows.length > 0) {
-      res.status(400).send("Email already in use");
+      res
+        .status(400)
+        .send(
+          "Email already in use, search your inbox for a confirmation email or contact an admin for assistance"
+        );
       return;
     }
 
@@ -133,6 +136,8 @@ app.post("/register", async (req, res) => {
       console.log("Email sent");
     }
   });
+
+  res.send("Check your email for a confirmation link");
 });
 
 app.get("/confirm/:token", async (req, res) => {
