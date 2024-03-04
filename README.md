@@ -10,8 +10,8 @@ The source code for the old CHS MC website can be found here on [github](https:/
 cd frontend
 npm install
 npm run prod
-
 cd ..
+
 cd backend
 npm install
 npx nodemon index.js
@@ -22,7 +22,8 @@ npx nodemon index.js
 cd backend
 npm install
 node .
-cd ..
+
+# In another terminal
 cd frontend
 npm install
 npm run dev
@@ -42,9 +43,26 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_USER: chs-mc-website
+      DB_PASS: hunter2
+      DB_NAME: mc_stats
+      DB_HOST: mariadb:3306
+      MAIL_FROM: hello@example.com
+      MAIL_NAME: "Your Name"
+      MAIL_HOST: sandbox.smtp.mailtrap.io
+      MAIL_PORT: 2525
+      MAIL_USER: whatever
+      MAIL_PASS: hunter2
+      MAIL_SSL: false
+    depends_on:
+      - mariadb
+  mariadb:
+    # ...
 ```
 
-Copy the latest version of the dynmap website files from the plugin folder to the `public/dynmap` folder.
+Copy the latest version of the dynmap website files from the plugin folder to the `dist/dynmap` folder.
 
 ## License
 
