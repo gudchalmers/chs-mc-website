@@ -1,5 +1,6 @@
 /db/
+/.github/
 /frontend/node_modules/
+/frontend/dist/
 /backend/node_modules/
-/vendor/
-.env
+/backend/.env
