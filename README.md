@@ -5,6 +5,7 @@ This is the CHS MC website that can be found here [mc.chs.se](https://mc.chs.se/
 The source code for the old CHS MC website can be found here on [github](https://github.com/gudchalmers/chs-mc-website/tree/aa622740b57cfc073a5d3f4b9321ecb184ad7804).
 
 ## Development
+### Backend
 ```shell script
 cd frontend
 npm install
@@ -16,7 +17,16 @@ npm install
 npx nodemon index.js
 ```
 
-For frontend development you probably want a better setup.
+### Frontend
+```shell script
+cd backend
+npm install
+node .
+cd ..
+cd frontend
+npm install
+npm run dev
+```
 
 ## Deployment
 

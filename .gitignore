@@ -1,7 +1,6 @@
 # Custom
 
 /frontend/public/js*
-/frontend/public/images*
 /frontend/public/css*
 /frontend/public/mix-manifest.json
 

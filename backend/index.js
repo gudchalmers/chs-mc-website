@@ -1,8 +1,5 @@
 import express from "express";
 import mc from "minecraftstatuspinger";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import mariadb from "mariadb";
@@ -41,17 +38,9 @@ const seed = async () => {
 seed();
 
 const app = express();
-const currentFilePath = fileURLToPath(import.meta.url);
-const currentDirPath = dirname(currentFilePath);
-
-app.use(express.static("../frontend/public")); // use public
+app.use(express.static("../frontend/dist")); // use public
 app.use(express.json()); // to support JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
-
-app.get("/", (req, res) => {
-  const filePath = path.join(currentDirPath, "home.html");
-  res.sendFile(filePath);
-});
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -74,7 +63,7 @@ app.post("/register", async (req, res) => {
   let username = req.body.username.toLowerCase();
 
   // check that username is only letters and numbers or underscore
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+  if (!/^[a-z0-9_]+$/.test(username)) {
     res.status(400).send("Invalid username");
     return;
   }
@@ -85,14 +74,15 @@ app.post("/register", async (req, res) => {
     return;
   }
 
-  let uuid = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
-    .then((response) => {
-      if (response.status === 404) {
-        res.status(400).send("Username doesn't exist");
-        return;
-      }
-      return response.json().id;
-    })  
+  let uuid = await fetch(
+    `https://api.mojang.com/users/profiles/minecraft/${username}`
+  ).then((response) => {
+    if (response.status === 404) {
+      res.status(400).send("Username doesn't exist");
+      return;
+    }
+    return response.json().id;
+  });
 
   let token = crypto.randomBytes(32).toString("hex");
 
@@ -175,7 +165,8 @@ app.get("/ping", async (_, res) => {
     let result = await mc.lookup({ host: "mc.chs.se" });
     res.send(result);
   } catch (error) {
-    res.status(500).send("An error occurred while pinging the server.");
+    //server is offline
+    res.send({ error: "Server is offline" });
   }
 });
 
