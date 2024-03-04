@@ -56,7 +56,7 @@ app.get("/", (req, res) => {
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,
-  secure: true,
+  secure: process.env.MAIL_SSL === "true" ? true : false,
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
@@ -64,23 +64,72 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/register", async (req, res) => {
-  let userEmail = req.body.email;
-  let username = req.body.username;
+  let userEmail = req.body.email.toLowerCase();
+
+  if (!userEmail.endsWith("@chalmers.se")) {
+    res.status(400).send("Invalid email");
+    return;
+  }
+
+  let username = req.body.username.toLowerCase();
+
+  // check that username is only letters and numbers or underscore
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    res.status(400).send("Invalid username");
+    return;
+  }
+
+  // check that username is under 64 characters
+  if (username.length > 16) {
+    res.status(400).send("Username is too long");
+    return;
+  }
+
+  let uuid = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
+    .then((response) => {
+      if (response.status === 404) {
+        res.status(400).send("Username doesn't exist");
+        return;
+      }
+      return response.json().id;
+    })  
 
   let token = crypto.randomBytes(32).toString("hex");
 
+  let conn;
+  try {
+    conn = await pool.getConnection();
+
+    // Check if email already exists
+    let sql = "SELECT * FROM users WHERE email = ?";
+    let rows = await conn.query(sql, [userEmail]);
+    if (rows.length > 0) {
+      res.status(400).send("Email already in use");
+      return;
+    }
+
+    sql = "INSERT INTO users (email, username, active) VALUES (?, ?, 0)";
+    await conn.query(sql, [userEmail, username]);
+    sql = "SELECT id FROM users WHERE email = ?";
+    rows = await conn.query(sql, [userEmail]);
+    let userId = rows[0].id;
+    sql = "INSERT INTO confirmations (user_id, token) VALUES (?, ?)";
+    await conn.query(sql, [userId, token]);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (conn) conn.end();
+  }
+
   // Send email with the token
   let mailOptions = {
-    from: `"${process.env.MAIL_NAME}>" <${process.env.MAIL_FROM}>`,
+    from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_FROM}>`,
     to: userEmail,
     subject: "Registration Confirmation for mc.chs.se",
-    text:
-      "Please confirm your registration by clicking the following link: \nhttp://" +
-      req.headers.host +
-      "/confirm/" +
-      token +
-      "\n\n" +
-      "If you did not request this, please ignore this email.",
+    text: `Please confirm your registration by clicking the following link: 
+      <a href='http://${req.headers.host}/confirm/${token}'>http://${req.headers.host}/confirm/${token}</a>
+
+      If you did not request this, please ignore this email.`,
   };
 
   transporter.sendMail(mailOptions, function (err) {
@@ -90,22 +139,6 @@ app.post("/register", async (req, res) => {
       console.log("Email sent");
     }
   });
-
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    let sql = "INSERT INTO users (email, username, active) VALUES (?, ?, 0)";
-    await conn.query(sql, [userEmail, username]);
-    sql = "SELECT id FROM users WHERE email = ?";
-    const rows = await conn.query(sql, [userEmail]);
-    let userId = rows[0].id;
-    sql = "INSERT INTO confirmations (user_id, token) VALUES (?, ?)";
-    await conn.query(sql, [userId, token]);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    if (conn) conn.end();
-  }
 });
 
 app.get("/confirm/:token", async (req, res) => {
@@ -121,9 +154,14 @@ app.get("/confirm/:token", async (req, res) => {
       await conn.query(sql, [token]);
       sql = "UPDATE users SET active = 1 WHERE id = ?";
       await conn.query(sql, [rows[0].user_id]);
-      res.send("Your account has been activated.");
+      res.send(`Your account has been activated. Redirecting to the home page...
+      <script>
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
+      </script>`);
     } else {
-      res.send("Invalid token.");
+      res.send("Invalid token. Try again. <a href='/'>Go to back</a>");
     }
   } catch (err) {
     console.error(err);

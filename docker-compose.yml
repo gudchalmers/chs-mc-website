@@ -17,6 +17,7 @@ services:
       MAIL_PORT: 2525
       MAIL_USER: ed34e3c7508a9d
       MAIL_PASS: e278e352efca4b
+      MAIL_SSL: false
   mariadb:
     image: mariadb:11
     container_name: mariadb
