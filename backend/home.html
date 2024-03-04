@@ -60,7 +60,33 @@
             <h2 class="title is-4">Getting started:</h2>
             <p class="subtitle is-6">To join the server you need to register your account with your Chalmers student
               email.</p>
-            <div class="tile notification is-info has-text-left">
+            <form id="register-form" action="/register" method="POST">
+              <div class="field">
+                <label class="label">Chalmers email</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="email" placeholder="cid@chalmers.se" required pattern=".*@chalmers.se"
+                    name="email">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Minecraft username</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="text" placeholder="Your Minecraft username" required name="username">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <input class="button is-primary" type="submit" value="Submit">
+                </div>
+              </div>
+            </form>
+            <!-- <div class="tile notification is-info has-text-left">
               <ol>
                 <li>
                   <p>Login to <span class="has-text-warning">auth.mc.chs.se</span> in minecraft and follow the
@@ -70,7 +96,7 @@
                     class="has-text-warning">mc.chs.se</span> and start playing.
                 </li>
               </ol>
-            </div>
+            </div> -->
             <hr>
             <div>
               <a target="_blank" href="https://gud.chs.chalmers.se">

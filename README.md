@@ -1,43 +1,41 @@
 # CHS MC Website
 
-This is the CHS MC website that can be found here [mc.chs.se][1]
+This is the CHS MC website that can be found here [mc.chs.se](https://mc.chs.se/).
 
-## Requirement
+The source code for the old CHS MC website can be found here on [github](https://github.com/gudchalmers/chs-mc-website/tree/aa622740b57cfc073a5d3f4b9321ecb184ad7804).
 
-* Requires a database with a `mc_stats` table
-* Webserver with php, [composer][2] and [nodejs][3]
-
-## Setup
-
-Rename the `.env.example` to `.env` and modify it to the current environment.
-
-The site is served out of the `public` folder.
-
-To setup the dev run:
-
+## Development
 ```shell script
-composer install
+cd frontend
 npm install
-npm run dev
-# or
-npm run watch
+npm run prod
+
+cd ..
+cd backend
+npm install
+npx nodemon index.js
 ```
 
-To setup the production site run:
+For frontend development you probably want a better setup.
 
-```shell script
-composer install --optimize-autoloader --no-dev
-npm install --production
-npm run prod
+## Deployment
+
+Using docker-compose:
+
+```yml
+version: '3'
+
+services:
+  chs-mc-website:
+    image: ghcr.io/gudchalmers/chs-mc-website:main
+    container_name: chs-mc-website
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
 ```
 
 Copy the latest version of the dynmap website files from the plugin folder to the `public/dynmap` folder.
 
 ## License
 
-[MIT][4]
-
-[1]: https://mc.chs.se/
-[2]: https://getcomposer.org/
-[3]: https://nodejs.org/
-[4]: https://choosealicense.com/licenses/mit/
+[MIT](https://choosealicense.com/licenses/mit/)

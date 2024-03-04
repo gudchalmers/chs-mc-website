@@ -4,7 +4,7 @@ ENV NODE_ENV=production
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm install --production
 
 COPY frontend/ ./
 RUN npm run production
@@ -12,7 +12,7 @@ RUN npm run production
 WORKDIR /app/backend
 
 COPY backend/package*.json ./
-RUN npm install
+RUN npm install --production
 
 COPY backend/ ./
 
