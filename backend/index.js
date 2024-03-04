@@ -24,13 +24,16 @@ const seed = async () => {
     await conn.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
     await conn.query(`USE ${dbName}`);
     await conn.query(
-      `CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255), username VARCHAR(255), active BOOLEAN)`
+      `CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255), username VARCHAR(255), uuid VARCHAR(255), active BOOLEAN)`
     );
     await conn.query(
       `CREATE TABLE IF NOT EXISTS confirmations (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, token VARCHAR(255))`
     );
+    console.log("Database initialized");
   } catch (err) {
     console.error(err);
+    // try again in 30 seconds
+    setTimeout(seed, 30000);
   } finally {
     if (conn) conn.end();
   }
@@ -98,8 +101,9 @@ app.post("/register", async (req, res) => {
       return;
     }
 
-    sql = "INSERT INTO users (email, username, active) VALUES (?, ?, 0)";
-    await conn.query(sql, [userEmail, username]);
+    sql =
+      "INSERT INTO users (email, username, uuid, active) VALUES (?, ?, ?, 0)";
+    await conn.query(sql, [userEmail, username, uuid]);
     sql = "SELECT id FROM users WHERE email = ?";
     rows = await conn.query(sql, [userEmail]);
     let userId = rows[0].id;

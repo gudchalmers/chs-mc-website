@@ -2,10 +2,13 @@ import mustache from "mustache";
 import { Converter } from "@gorymoon/minecraft-text";
 import tippy from "tippy.js";
 
-import "@fortawesome/fontawesome-free/js/fontawesome";
-import "@fortawesome/fontawesome-free/js/solid";
-import "@fortawesome/fontawesome-free/js/regular";
-import "@fortawesome/fontawesome-free/js/brands";
+import { faMap } from "@fortawesome/free-regular-svg-icons";
+import { faEnvelope, faUser, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { library, dom } from "@fortawesome/fontawesome-svg-core";
+
+library.add(faMap, faEnvelope, faUser, faSpinner);
+dom.watch();
+
 import "tippy.js/dist/tippy.css";
 import "./app.scss";
 
@@ -36,7 +39,6 @@ document.body.addEventListener("click", function (e) {
     e.target.parentElement.classList.remove("is-active");
   }
 });
-
 
 let statusElem = document.getElementById("status");
 async function updateMOTD() {
