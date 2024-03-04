@@ -8,15 +8,15 @@ services:
     environment:
       PORT: 3000
       DB_USER: chs-mc-website
-      DB_PASS: 5a7XoNwyRKgDyr9sA2rh
+      DB_PASS: hunter2
       DB_NAME: mc_stats
-      DB_HOST: mariadb
+      DB_HOST: mariadb:3306
       MAIL_FROM: hello@example.com
       MAIL_NAME: 'CHS Minecraft Server'
       MAIL_HOST: sandbox.smtp.mailtrap.io
       MAIL_PORT: 2525
-      MAIL_USER: ed34e3c7508a9d
-      MAIL_PASS: e278e352efca4b
+      MAIL_USER: whatever
+      MAIL_PASS: hunter2
       MAIL_SSL: false
   mariadb:
     image: mariadb:11
@@ -27,10 +27,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 5a7XoNwyRKgDyr9sA2rh
+      MYSQL_ROOT_PASSWORD: hunter2
       MYSQL_DATABASE: mc_stats
       MYSQL_USER: chs-mc-website
-      MYSQL_PASSWORD: 5a7XoNwyRKgDyr9sA2rh
+      MYSQL_PASSWORD: hunter2
 
 volumes:
   mariadb:
