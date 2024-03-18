@@ -39,7 +39,6 @@ version: '3'
 services:
   chs-mc-website:
     image: ghcr.io/gudchalmers/chs-mc-website:main
-    container_name: chs-mc-website
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -48,24 +47,21 @@ services:
       DB_USER: chs-mc-website
       DB_PASS: hunter2
       DB_NAME: mc_stats
-      DB_HOST: mariadb:3306
+      DB_HOST: mariadb
       MAIL_FROM: hello@example.com
       MAIL_NAME: "Your Name"
-      MAIL_HOST: sandbox.smtp.mailtrap.io
-      MAIL_PORT: 2525
+      MAIL_HOST: smtp-relay.gmail.com
+      MAIL_PORT: 465
       MAIL_USER: whatever
       MAIL_PASS: hunter2
-      MAIL_SSL: false
+      MAIL_SSL: true
     depends_on:
       - mariadb
   mariadb:
     image: mariadb:11
-    container_name: mariadb
     volumes:
       - mariadb:/var/lib/mysql
     restart: unless-stopped
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: hunter2
       MYSQL_DATABASE: mc_stats
