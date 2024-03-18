@@ -106,8 +106,7 @@ app.post("/register", async (req, res) => {
 						await sendConfirmationEmail(
 							userEmail,
 							req.headers.host,
-							token,
-							transporter,
+							token
 						);
 						res.send(
 							"Account already exists but is not active. Confirmation email has been resent. Check your inbox and spam folder.",
@@ -134,8 +133,7 @@ app.post("/register", async (req, res) => {
 			await sendConfirmationEmail(
 				userEmail,
 				req.headers.host,
-				token,
-				transporter,
+				token
 			);
 		} catch (err) {
 			console.error(err);
@@ -160,7 +158,7 @@ app.post("/register", async (req, res) => {
 	res.send("Check your email for a confirmation link");
 });
 
-function sendConfirmationEmail(userEmail, host, token, transporter) {
+function sendConfirmationEmail(userEmail, host, token) {
 	const mailOptions = {
 		from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_FROM}>`,
 		to: userEmail,
