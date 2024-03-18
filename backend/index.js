@@ -132,12 +132,12 @@ If you did not request this, please ignore this email.`,
 	transporter.sendMail(mailOptions, (err) => {
 		if (err) {
 			console.error("There was an error: ", err);
+      res.status(500).send("Failed to send email");
 		} else {
 			console.log("Email sent");
+      res.send("Check your email for a confirmation link");
 		}
 	});
-
-	res.send("Check your email for a confirmation link");
 });
 
 app.get("/confirm/:token", async (req, res) => {
