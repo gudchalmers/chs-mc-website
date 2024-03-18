@@ -59,7 +59,18 @@ services:
     depends_on:
       - mariadb
   mariadb:
-    # ...
+    image: mariadb:11
+    container_name: mariadb
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: hunter2
+      MYSQL_DATABASE: mc_stats
+      MYSQL_USER: chs-mc-website
+      MYSQL_PASSWORD: hunter2
 ```
 
 Copy the latest version of the dynmap website files from the plugin folder to the `dist/dynmap` folder.
