@@ -175,7 +175,7 @@ If you did not request this, please ignore this email.`,
 				console.error("There was an error: ", err);
 				reject(err);
 			} else {
-				console.log("Email sent: ", info.response);
+				console.log(`Email sent with token: ${token} Server response: ${info.response}`);
 				resolve(info);
 			}
 		});
