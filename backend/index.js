@@ -96,11 +96,50 @@ app.post("/register", async (req, res) => {
 		let sql = "SELECT * FROM users WHERE email = ?";
 		let rows = await conn.query(sql, [userEmail]);
 		if (rows.length > 0) {
-			res
-				.status(400)
-				.send(
-					"Email already in use, search your inbox for a confirmation email or contact an admin for assistance",
-				);
+			// If the account is not active, resend the confirmation email
+			if (!rows[0].active) {
+				sql = "SELECT token FROM confirmations WHERE user_id = ?";
+				const tokenRows = await conn.query(sql, [rows[0].id]);
+				if (tokenRows.length > 0) {
+					const token = tokenRows[0].token;
+					try {
+						await sendConfirmationEmail(
+							userEmail,
+							req.headers.host,
+							token,
+							transporter,
+						);
+						res.send(
+							"Account already exists but is not active. Confirmation email has been resent. Check your inbox and spam folder.",
+						);
+					} catch (err) {
+						console.error(err);
+						res.status(500).send("Failed to send confirmation email");
+						return;
+					}
+				} else {
+					res
+						.status(400)
+						.send(
+							"Account already exists but is not active, and no confirmation token found. Contact an admin for assistance.",
+						);
+				}
+			} else {
+				res.status(400).send("Account already exists and is active.");
+			}
+			return;
+		}
+
+		try {
+			await sendConfirmationEmail(
+				userEmail,
+				req.headers.host,
+				token,
+				transporter,
+			);
+		} catch (err) {
+			console.error(err);
+			res.status(500).send("Failed to send confirmation email");
 			return;
 		}
 
@@ -118,27 +157,32 @@ app.post("/register", async (req, res) => {
 		if (conn) conn.end();
 	}
 
-	// Send email with the token
+	res.send("Check your email for a confirmation link");
+});
+
+function sendConfirmationEmail(userEmail, host, token, transporter) {
 	const mailOptions = {
 		from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_FROM}>`,
 		to: userEmail,
 		subject: "Registration Confirmation for mc.chs.se",
 		text: `Hello,
-Please confirm your registration by clicking the following link: http://${req.headers.host}/confirm/${token}
+Please confirm your registration by clicking the following link: http://${host}/confirm/${token}
 
 If you did not request this, please ignore this email.`,
 	};
 
-	transporter.sendMail(mailOptions, (err) => {
-		if (err) {
-			console.error("There was an error: ", err);
-      res.status(500).send("Failed to send email");
-		} else {
-			console.log("Email sent");
-      res.send("Check your email for a confirmation link");
-		}
+	return new Promise((resolve, reject) => {
+		transporter.sendMail(mailOptions, (err, info) => {
+			if (err) {
+				console.error("There was an error: ", err);
+				reject(err);
+			} else {
+				console.log("Email sent: ", info.response);
+				resolve(info);
+			}
+		});
 	});
-});
+}
 
 app.get("/confirm/:token", async (req, res) => {
 	const token = req.params.token;
@@ -160,7 +204,7 @@ app.get("/confirm/:token", async (req, res) => {
         }, 3000);
       </script>`);
 		} else {
-			res.send("Invalid token. Try again. <a href='/'>Go to back</a>");
+			res.send("Invalid token. Try again. <a href='/'>Go to start</a>");
 		}
 	} catch (err) {
 		console.error(err);

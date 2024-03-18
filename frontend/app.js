@@ -16,22 +16,22 @@ const converter = new Converter({ newline: true });
 
 tippy("[data-tippy-content]");
 
-let navbarMenu = document.getElementById("navbarMenu");
+const navbarMenu = document.getElementById("navbarMenu");
 
-let navbarBurger = document.getElementById("navbar-burger");
-navbarBurger.addEventListener("click", function () {
+const navbarBurger = document.getElementById("navbar-burger");
+navbarBurger.addEventListener("click", () => {
   navbarBurger.classList.toggle("is-active");
   navbarMenu.classList.toggle("is-active");
 });
 
-document.body.addEventListener("click", function (e) {
+document.body.addEventListener("click", (e) => {
   if (e.target.classList.contains("chs-modal-close")) {
-    let modal = e.target.getAttribute("data-modal");
+    const modal = e.target.getAttribute("data-modal");
     document.getElementById(modal).classList.remove("is-active");
   }
 
   if (e.target.classList.contains("chs-modal-open")) {
-    let modal = e.target.getAttribute("data-modal");
+    const modal = e.target.getAttribute("data-modal");
     document.getElementById(modal).classList.add("is-active");
   }
 
@@ -40,7 +40,7 @@ document.body.addEventListener("click", function (e) {
   }
 });
 
-let statusElem = document.getElementById("status");
+const statusElem = document.getElementById("status");
 async function updateMOTD() {
   try {
     const response = await fetch("/ping");
@@ -51,9 +51,9 @@ async function updateMOTD() {
     const rendered = mustache.render(
       document.getElementById("motd-template-success").innerHTML,
       {
-        current: data["players"]["online"],
-        max: data["players"]["max"],
-        motd: converter.toHTML(converter.parse(data["description"])),
+        current: data.players.online,
+        max: data.players.max,
+        motd: converter.toHTML(converter.parse(data.description)),
       }
     );
     statusElem.innerHTML = rendered;
