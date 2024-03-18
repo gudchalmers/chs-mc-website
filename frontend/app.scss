@@ -3,28 +3,28 @@
 
 html,
 body {
-    font-family: "Open Sans", Arial, Helvetica, sans-serif;
-    background-color: #00acff;
-    overflow-y: auto;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  background-color: #00acff;
+  overflow-y: auto;
 }
 
 .bg {
-    background-image: url("/images/spawn.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-image: url("/images/spawn.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #status {
-    color: #ffffff;
-    background-color: #46413F;
-    border-radius: 0.3rem;
-    width: fit-content;
-    margin: 0 auto;
-    margin-bottom: 0.5rem;
-    padding: 1rem;
+  color: #ffffff;
+  background-color: #46413f;
+  border-radius: 0.3rem;
+  width: fit-content;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
 }
 
 #players {
-    cursor: pointer;
+  cursor: pointer;
 }

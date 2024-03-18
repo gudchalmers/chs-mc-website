@@ -189,12 +189,13 @@ app.get("/confirm/:token", async (req, res) => {
 		conn = await pool.getConnection();
 		let sql = "SELECT user_id FROM confirmations WHERE token = ?";
 		const rows = await conn.query(sql, [token]);
-		if (rows.length) {
+		if (rows.length > 0) {
 			// If the token exists, delete it from the database and set the user to active
 			sql = "DELETE FROM confirmations WHERE token = ?";
 			await conn.query(sql, [token]);
 			sql = "UPDATE users SET active = 1 WHERE id = ?";
 			await conn.query(sql, [rows[0].user_id]);
+      console.log(`Token: ${token} has been used to activate an account`)
 			res.send(`Your account has been activated. Redirecting to the home page...
       <script>
         setTimeout(() => {
