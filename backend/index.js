@@ -103,11 +103,7 @@ app.post("/register", async (req, res) => {
 				if (tokenRows.length > 0) {
 					const token = tokenRows[0].token;
 					try {
-						await sendConfirmationEmail(
-							userEmail,
-							req.headers.host,
-							token
-						);
+						await sendConfirmationEmail(userEmail, req.headers.host, token);
 						res.send(
 							"Account already exists but is not active. Confirmation email has been resent. Check your inbox and spam folder.",
 						);
@@ -130,11 +126,7 @@ app.post("/register", async (req, res) => {
 		}
 
 		try {
-			await sendConfirmationEmail(
-				userEmail,
-				req.headers.host,
-				token
-			);
+			await sendConfirmationEmail(userEmail, req.headers.host, token);
 		} catch (err) {
 			console.error(err);
 			res.status(500).send("Failed to send confirmation email");
@@ -175,7 +167,9 @@ If you did not request this, please ignore this email.`,
 				console.error("There was an error: ", err);
 				reject(err);
 			} else {
-				console.log(`Email sent with token: ${token} Server response: ${info.response}`);
+				console.log(
+					`Email sent with token: ${token} Server response: ${info.response}`,
+				);
 				resolve(info);
 			}
 		});
@@ -195,7 +189,7 @@ app.get("/confirm/:token", async (req, res) => {
 			await conn.query(sql, [token]);
 			sql = "UPDATE users SET active = 1 WHERE id = ?";
 			await conn.query(sql, [rows[0].user_id]);
-      console.log(`Token: ${token} has been used to activate an account`)
+			console.log(`Token: ${token} has been used to activate an account`);
 			res.send(`Your account has been activated. Redirecting to the home page...
       <script>
         setTimeout(() => {
@@ -223,7 +217,8 @@ app.get("/ping", async (_, res) => {
 });
 
 app.post("/check", async (req, res) => {
-	const uuid = req.body.uuid;
+	const uuid = req.body.uuid.replace(/-/g, "").toLowerCase();
+	let status = "denied";
 
 	let conn;
 	try {
@@ -231,16 +226,17 @@ app.post("/check", async (req, res) => {
 		const sql = "SELECT * FROM users WHERE uuid = ?";
 		const rows = await conn.query(sql, [uuid]);
 		if (rows.length > 0) {
-			res.send({ status: rows[0].active ? "success" : "denied" });
-		} else {
-			res.send({ status: "denied" });
+			status = rows[0].active ? "success" : "denied";
 		}
+		res.send({ status: status });
 	} catch (err) {
 		console.error(err);
-		res.send({ status: "denied" });
+		res.send({ status: status });
 	} finally {
 		if (conn) conn.end();
 	}
+
+	console.log(`Auth for ${uuid} is "${status}"`);
 });
 
 app.listen(port, () => {
