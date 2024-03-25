@@ -95,7 +95,11 @@ app.post("/register", async (req, res) => {
 		// Check if email already exists
 		let sql = "SELECT * FROM users WHERE email = ?";
 		let rows = await conn.query(sql, [userEmail]);
+
 		if (rows.length > 0) {
+			console.log(
+				`User with email ${userEmail} already exists: ${rows[0].toString()}`,
+			);
 			// If the account is not active, resend the confirmation email
 			if (!rows[0].active) {
 				sql = "SELECT token FROM confirmations WHERE user_id = ?";
@@ -120,6 +124,7 @@ app.post("/register", async (req, res) => {
 						);
 				}
 			} else {
+				
 				res.status(400).send("Account already exists and is active.");
 			}
 			return;
