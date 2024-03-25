@@ -80,11 +80,27 @@ app.post("/register", async (req, res) => {
 	const response = await fetch(
 		`https://api.mojang.com/users/profiles/minecraft/${username}`,
 	);
+
 	if (response.status === 404) {
+		console.log(`Failed to get uuid for ${username}`);
 		res.status(400).send("Username doesn't exist");
 		return;
 	}
+
+	// check if response is valid json
+	if (!response.ok) {
+		console.log(`Failed to get uuid for ${username}`);
+		res.status(500).send("Failed to check username");
+		return;
+	}
+
 	const uuid = await response.json().id;
+
+	if (!uuid || uuid == null) {
+		console.log(`Failed to get uuid for ${username}: ${uuid}`);
+		res.status(500).send("Failed to get UUID, try again later");
+		return;
+	}
 
 	const token = crypto.randomBytes(32).toString("hex");
 
@@ -98,7 +114,9 @@ app.post("/register", async (req, res) => {
 
 		if (rows.length > 0) {
 			console.log(
-				`User with email ${userEmail} already exists: ${rows[0].toString()}`,
+				`User with email ${userEmail} already exists: ${JSON.stringify(
+					rows[0],
+				)}`,
 			);
 			// If the account is not active, resend the confirmation email
 			if (!rows[0].active) {
@@ -124,7 +142,6 @@ app.post("/register", async (req, res) => {
 						);
 				}
 			} else {
-				
 				res.status(400).send("Account already exists and is active.");
 			}
 			return;
@@ -180,6 +197,47 @@ If you did not request this, please ignore this email.`,
 		});
 	});
 }
+
+// This path could perhaps be exploited
+app.get("/updateUUID/:username", async (req, res) => {
+	const username = req.params.username.toLowerCase();
+	const response = await fetch(
+		`https://api.mojang.com/users/profiles/minecraft/${username}`,
+	);
+
+	if (response.status === 404) {
+		console.log(`Failed to get uuid for ${username}`);
+		res.status(400).send("Username doesn't exist");
+		return;
+	}
+
+	if (!response.ok) {
+		console.log(`Failed to get uuid for ${username}`);
+		res.status(500).send("Failed to check username");
+		return;
+	}
+
+	const uuid = await response.json().id;
+
+	if (!uuid || uuid == null) {
+		console.log(`Failed to get uuid for ${username}: ${uuid}`);
+		res.status(500).send("Failed to get UUID, try again later");
+		return;
+	}
+
+	let conn;
+	try {
+		conn = await pool.getConnection();
+		const sql = "UPDATE users SET uuid = ? WHERE username = ?";
+		await conn.query(sql, [uuid, username]);
+	} catch (err) {
+		console.error(err);
+	} finally {
+		if (conn) conn.end();
+	}
+
+	res.send(`Updated UUID for ${username} to ${uuid}`);
+});
 
 app.get("/confirm/:token", async (req, res) => {
 	const token = req.params.token;
