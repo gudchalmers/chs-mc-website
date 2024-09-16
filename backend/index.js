@@ -76,7 +76,7 @@ const recheck = async () => {
 	} finally {
 		if (conn) conn.end();
 	}
-}
+};
 recheck();
 
 const app = express();

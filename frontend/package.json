@@ -1,28 +1,28 @@
 {
-  "name": "mc.chs",
-  "version": "1.0.0",
-  "description": "Home of mc.chs.se",
-  "main": "index.js",
-  "author": "Gustaf Järgren (Berg)",
-  "license": "MIT",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.1",
-    "@fortawesome/free-regular-svg-icons": "^6.5.1",
-    "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@gorymoon/minecraft-text": "^1.0.2",
-    "bulma": "^0.9.4",
-    "mustache": "^4.2.0",
-    "tippy.js": "^6.3.7"
-  },
-  "devDependencies": {
-    "sass": "^1.71.1",
-    "vite": "^5.1.5"
-  }
+	"name": "mc.chs",
+	"version": "1.0.0",
+	"description": "Home of mc.chs.se",
+	"main": "index.js",
+	"author": "Gustaf Järgren (Berg)",
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.5.1",
+		"@fortawesome/free-regular-svg-icons": "^6.5.1",
+		"@fortawesome/free-solid-svg-icons": "^6.5.1",
+		"@gorymoon/minecraft-text": "^1.0.2",
+		"bulma": "^0.9.4",
+		"mustache": "^4.2.0",
+		"tippy.js": "^6.3.7"
+	},
+	"devDependencies": {
+		"sass": "^1.71.1",
+		"vite": "^5.1.5"
+	}
 }
