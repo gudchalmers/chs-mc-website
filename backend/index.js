@@ -40,6 +40,45 @@ const seed = async () => {
 };
 seed();
 
+// recheck all uuid that is NULL or 'NULL'
+const recheck = async () => {
+	let conn;
+	try {
+		conn = await pool.getConnection();
+		const sql = "SELECT * FROM users WHERE uuid IS NULL OR uuid = 'NULL'";
+		const rows = await conn.query(sql);
+		console.log(`Rechecking ${rows.length} users`);
+		for (const row of rows) {
+			const response = await fetch(
+				`https://api.mojang.com/users/profiles/minecraft/${row.username}`,
+			);
+			if (response.status === 404) {
+				console.log(`Failed to get uuid for ${row.username}`);
+				continue;
+			}
+			if (!response.ok) {
+				console.log(`Failed to get uuid for ${row.username}`);
+				continue;
+			}
+			const uuid = (await response.json()).id;
+			if (!uuid || uuid == null) {
+				console.log(`Failed to get uuid for ${row.username}: ${uuid}`);
+				continue;
+			}
+			const updateSql = "UPDATE users SET uuid = ? WHERE username = ?";
+			await conn.query(updateSql, [uuid, row.username]);
+			console.log(`Updated UUID for ${row.username} to ${uuid}`);
+		}
+	} catch (err) {
+		console.error(err);
+		console.log("Retrying in 30 minutes");
+		setTimeout(recheck, 30 * 60 * 1000);
+	} finally {
+		if (conn) conn.end();
+	}
+}
+recheck();
+
 const app = express();
 app.use(express.static("../frontend/dist")); // use public
 app.use(express.json()); // to support JSON-encoded bodies
@@ -94,7 +133,11 @@ app.post("/register", async (req, res) => {
 		return;
 	}
 
-	const uuid = await response.json().id;
+	const json = await response.json();
+	console.log(json);
+	const uuid = json.id;
+
+	console.log(`UUID for ${username} is ${uuid}`);
 
 	if (!uuid || uuid == null) {
 		console.log(`Failed to get uuid for ${username}: ${uuid}`);
