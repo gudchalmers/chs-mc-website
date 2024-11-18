@@ -9,7 +9,7 @@ The source code for the old CHS MC website can be found here on [github](https:/
 ```shell script
 cd frontend
 npm install
-npm run prod
+npm run build
 cd ..
 
 cd backend

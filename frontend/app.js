@@ -22,11 +22,11 @@ tippy("[data-tippy-content]");
 
 const navbarMenu = document.getElementById("navbarMenu");
 
-const navbarBurger = document.getElementById("navbar-burger");
-navbarBurger.addEventListener("click", () => {
-	navbarBurger.classList.toggle("is-active");
-	navbarMenu.classList.toggle("is-active");
-});
+// const navbarBurger = document.getElementById("navbar-burger");
+// navbarBurger.addEventListener("click", () => {
+// 	navbarBurger.classList.toggle("is-active");
+// 	navbarMenu.classList.toggle("is-active");
+// });
 
 document.body.addEventListener("click", (e) => {
 	if (e.target.classList.contains("chs-modal-close")) {
@@ -55,9 +55,9 @@ async function updateMOTD() {
 		const rendered = mustache.render(
 			document.getElementById("motd-template-success").innerHTML,
 			{
-				current: data.players.online,
-				max: data.players.max,
-				motd: converter.toHTML(converter.parse(data.description)),
+				current: data.status.players.online,
+				max: data.status.players.max,
+				motd: converter.toHTML(converter.parse(data.status.description)),
 			},
 		);
 		statusElem.innerHTML = rendered;

@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import nodemailer from "nodemailer";
 import mariadb from "mariadb";
 import "dotenv/config";
+import cors from "cors";
 
 const port = process.env.PORT || 3000;
 const dbName = process.env.DB_NAME || "mc_stats";
@@ -80,6 +81,7 @@ const recheck = async () => {
 recheck();
 
 const app = express();
+app.use(cors());
 app.use(express.static("../frontend/dist")); // use public
 app.use(express.json()); // to support JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
