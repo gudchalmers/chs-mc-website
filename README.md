@@ -1,5 +1,8 @@
 # CHS MC Website
 
+> [!NOTE]  
+> The plan is to deprecate this in favour of G.U.D. Gaming
+
 This is the CHS MC website that can be found here [mc.chs.se](https://mc.chs.se/).
 
 The source code for the old CHS MC website can be found here on [github](https://github.com/gudchalmers/chs-mc-website/tree/aa622740b57cfc073a5d3f4b9321ecb184ad7804).
