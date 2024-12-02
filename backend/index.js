@@ -176,14 +176,14 @@ app.post("/register", async (req, res) => {
             );
           } catch (err) {
             console.error(err);
-            res.status(500).send("Failed to send confirmation email");
+            res.status(500).send("Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se");
             return;
           }
         } else {
           res
             .status(400)
             .send(
-              "Account already exists but is not active, and no confirmation token found. Contact an admin for assistance."
+              "Account already exists but is not active, and no confirmation token found. Contact support@chs.se for assistance."
             );
         }
       } else {
@@ -196,7 +196,7 @@ app.post("/register", async (req, res) => {
       await sendConfirmationEmail(userEmail, req.headers.host, token);
     } catch (err) {
       console.error(err);
-      res.status(500).send("Failed to send confirmation email");
+      res.status(500).send("Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se");
       return;
     }
 
