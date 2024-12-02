@@ -1,7 +1,7 @@
 # CHS MC Website
 
 > [!NOTE]  
-> The plan is to deprecate this in favour of G.U.D. Gaming
+> The plan is to deprecate this in favour of [G.U.D. Gaming](https://github.com/gudchalmers/gud-gaming)
 
 This is the CHS MC website that can be found here [mc.chs.se](https://mc.chs.se/).
 
