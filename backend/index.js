@@ -176,7 +176,11 @@ app.post("/register", async (req, res) => {
             );
           } catch (err) {
             console.error(err);
-            res.status(500).send("Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se");
+            res
+              .status(500)
+              .send(
+                "Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se"
+              );
             return;
           }
         } else {
@@ -196,7 +200,11 @@ app.post("/register", async (req, res) => {
       await sendConfirmationEmail(userEmail, req.headers.host, token);
     } catch (err) {
       console.error(err);
-      res.status(500).send("Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se");
+      res
+        .status(500)
+        .send(
+          "Failed to send confirmation email. Check if email is correct. Otherwise contact support@chs.se"
+        );
       return;
     }
 

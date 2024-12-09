@@ -1,20 +1,20 @@
 {
-	"dependencies": {
-		"cors": "^2.8.5",
-		"dotenv": "^16.4.5",
-		"express": "^4.18.2",
-		"mariadb": "^3.2.3",
-		"minecraftstatuspinger": "^1.1.5",
-		"nodemailer": "^6.9.10"
-	},
-	"name": "backend",
-	"version": "1.0.0",
-	"main": "index.js",
-	"type": "module",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "",
-	"license": "ISC",
-	"description": ""
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.4.7",
+    "express": "5.0.1",
+    "mariadb": "3.4.0",
+    "minecraftstatuspinger": "1.2.1",
+    "nodemailer": "6.9.16"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
