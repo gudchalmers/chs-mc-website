@@ -170,7 +170,12 @@ app.post("/register", async (req, res) => {
         if (tokenRows.length > 0) {
           const token = tokenRows[0].token;
           try {
-            await sendConfirmationEmail(userEmail, req.headers.host, token);
+            await sendConfirmationEmail(
+              userEmail,
+              username,
+              req.headers.host,
+              token
+            );
             res.send(
               "Account already exists but is not active. Confirmation email has been resent. Check your inbox and spam folder."
             );
@@ -197,7 +202,7 @@ app.post("/register", async (req, res) => {
     }
 
     try {
-      await sendConfirmationEmail(userEmail, req.headers.host, token);
+      await sendConfirmationEmail(userEmail, username, req.headers.host, token);
     } catch (err) {
       console.error(err);
       res
@@ -225,15 +230,15 @@ app.post("/register", async (req, res) => {
   res.send("Check your email for a confirmation link");
 });
 
-function sendConfirmationEmail(userEmail, host, token) {
+function sendConfirmationEmail(userEmail, username, host, token) {
   const mailOptions = {
     from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_FROM}>`,
     to: userEmail,
     subject: "Registration Confirmation for mc.chs.se",
-    text: `Hello,
+    text: `Hello ${username},
 Please confirm your registration by clicking the following link: http://${host}/confirm/${token}
 
-If you did not request this, please ignore this email.`,
+This email was sent from mc.chs.se. If you did not request this, please ignore this email. Contact support@chs.se for assistance.`,
   };
 
   return new Promise((resolve, reject) => {
