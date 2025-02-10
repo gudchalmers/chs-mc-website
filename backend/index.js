@@ -82,7 +82,7 @@ recheck();
 
 const app = express();
 app.use(cors());
-app.use(express.static("../frontend/dist")); // use public
+// app.use(express.static("../frontend/dist")); // use public
 app.use(express.json()); // to support JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
 
@@ -94,6 +94,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
+});
+
+app.get("/", (_, res) => {
+  res.redirect(301, "https://gaming.chs.se");
 });
 
 app.post("/register", async (req, res) => {
